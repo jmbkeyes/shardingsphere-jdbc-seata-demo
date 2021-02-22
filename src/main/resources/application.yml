@@ -1,0 +1,39 @@
+server:
+  port: 9090
+spring:
+  shardingsphere:
+    datasource:
+      names: bocaicheckin${2018..2020}
+      bocaicheckin2018:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2019
+        username: root
+        password: jmbkeyes
+      bocaicheckin2019:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2019
+        username: root
+        password: jmbkeyes
+      bocaicheckin2020:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2020
+        username: root
+        password: jmbkeyes
+
+    sharding:
+      tables:
+        trainee_checkin_checkout:
+          actual-data-nodes: bocaicheckin${2018..2020}.trainee_checkin_checkout_${1..12}
+          database-strategy:
+            inline:
+              sharding-column: month
+              algorithm-expression: bocaicheckin${(month / 100) as int}
+          table-strategy:
+            inline:
+              sharding-column: month
+              algorithm-expression: trainee_checkin_checkout_${month % 100}
+    props:
+      sql.show: true
