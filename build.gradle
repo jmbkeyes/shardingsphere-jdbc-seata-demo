@@ -23,7 +23,8 @@ dependencies {
 //    implementation 'io.seata:seata-rm-datasource:1.4.1'
 //    implementation 'io.seata:seata-tm:1.4.1'
 //    implementation 'io.seata:seata-codec-all:1.0.0'
-//    implementation 'io.seata:seata-sqlparser:1.4.1'
+//    implementation 'io.seata:seata-sqlparser-druid:1.4.1'
+//    implementation 'io.seata:seata-serializer-seata:1.4.1'
     runtimeOnly 'mysql:mysql-connector-java:5.1.30'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
