@@ -1,6 +1,5 @@
 package com.forzadata.bodytrack.controller;
 
-import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
 import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
