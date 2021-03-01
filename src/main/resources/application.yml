@@ -3,6 +3,11 @@ server:
 spring:
   shardingsphere:
     datasource:
+      common:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        username: root
+        password: jmbkeyes
       names: bocaicheckin${2018..2020}
       bocaicheckin2018:
         type: com.zaxxer.hikari.HikariDataSource
