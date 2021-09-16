@@ -3,16 +3,11 @@ server:
 spring:
   shardingsphere:
     datasource:
-      common:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.jdbc.Driver
-        username: root
-        password: jmbkeyes
       names: bocaicheckin${2018..2020}
       bocaicheckin2018:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2019
+        jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2018
         username: root
         password: jmbkeyes
       bocaicheckin2019:
@@ -27,18 +22,28 @@ spring:
         jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2020
         username: root
         password: jmbkeyes
-
-    sharding:
-      tables:
-        trainee_checkin_checkout:
-          actual-data-nodes: bocaicheckin${2018..2020}.trainee_checkin_checkout_${1..12}
-          database-strategy:
-            inline:
-              sharding-column: month
-              algorithm-expression: bocaicheckin${(month / 100) as int}
-          table-strategy:
-            inline:
-              sharding-column: month
-              algorithm-expression: trainee_checkin_checkout_${month % 100}
+    rules:
+      sharding:
+        sharding-algorithms:
+          table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: trainee_checkin_checkout_$->{month % 100}
+          database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: bocaicheckin$->{(month / 100) as int}
+        tables:
+          trainee_checkin_checkout:
+            actual-data-nodes: bocaicheckin$->{2018..2020}.trainee_checkin_checkout_$->{1..12}
+            database-strategy:
+              standard:
+                sharding-column: month
+                sharding-algorithm-name: database-inline
+            table-strategy:
+              standard:
+                sharding-column: month
+                sharding-algorithm-name: table-inline
     props:
-      sql.show: true
+      sql-show: true
+    enabled: true
