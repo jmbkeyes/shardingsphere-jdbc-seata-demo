@@ -1,5 +1,7 @@
 package com.forzadata.bodytrack.controller;
 
+import com.forzadata.bodytrack.domain.TraineeCenterInfo;
+import com.forzadata.bodytrack.repository.TraineeCenterInfoRepository;
 import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
 import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,10 @@ public class TestController {
     JdbcTemplate jdbcTemplate;
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    TraineeCenterInfoRepository traineeCenterInfoRepository;
+
     @RequestMapping(value = "")
     public Object getCheckInRecords(){
         String sql = "select month, traineeId, count(1) as t from trainee_checkin_checkout where month in (202001,201903,201812) and centerId=269 group by month, traineeId having t>=3 order by t desc";
@@ -38,7 +44,7 @@ public class TestController {
     @Transactional(rollbackFor = Exception.class)
     @ShardingTransactionType(value = TransactionType.BASE)
     public Object getCheckInRecords2(@RequestParam(value = "rollback", defaultValue = "false")Boolean rollback) throws Exception {
-        List<Integer> months = getRangedMonths(201601, 202012);
+        List<Integer> months = getRangedMonths(201801, 202012);
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("months", months);
         String sql = "update trainee_checkin_checkout set centerId=-centerId where month in (:months) and centerId=269 and traineeId=5";
@@ -81,5 +87,39 @@ public class TestController {
         }
 
         return months;
+    }
+
+    @RequestMapping(value = "tci")
+    @Transactional(rollbackFor = Exception.class)
+    @ShardingTransactionType(value = TransactionType.BASE)
+    public Object testTraineeCenterInfo() throws Exception {
+        TraineeCenterInfo tci = new TraineeCenterInfo();
+        tci.setCenterId(1L);
+        tci.setName("abc1");
+        tci.setId(1L);
+        traineeCenterInfoRepository.save(tci);
+
+        tci = new TraineeCenterInfo();
+        tci.setCenterId(2L);
+        tci.setName("abc2");
+        tci.setId(2L);
+        traineeCenterInfoRepository.save(tci);
+
+        tci = new TraineeCenterInfo();
+        tci.setCenterId(3L);
+        tci.setName("abc3");
+        tci.setId(3L);
+        traineeCenterInfoRepository.save(tci);
+
+        try {
+            tci = new TraineeCenterInfo();
+            tci.setCenterId(4L);
+            tci.setName("abc4");
+            tci.setId(4L);
+            traineeCenterInfoRepository.save(tci);
+        }catch(Exception ex){
+            throw new Exception("111");
+        }
+        return "ok";
     }
 }
