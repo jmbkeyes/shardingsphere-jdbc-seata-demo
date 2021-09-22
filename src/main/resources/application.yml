@@ -1,6 +1,10 @@
 server:
   port: 9090
 spring:
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   shardingsphere:
     datasource:
       names: bocaicheckin${2018..2020}
@@ -33,6 +37,11 @@ spring:
             type: INLINE
             props:
               algorithm-expression: bocaicheckin$->{(month / 100) as int}
+          centerid-standard:
+            type: CLASS_BASED
+            props:
+              strategy: standard
+              algorithmClassName: com.forzadata.bodytrack.shardingstrategy.database.CenterIdPrecisionShardingAlgorithm
         tables:
           trainee_checkin_checkout:
             actual-data-nodes: bocaicheckin$->{2018..2020}.trainee_checkin_checkout_$->{1..12}
@@ -44,6 +53,13 @@ spring:
               standard:
                 sharding-column: month
                 sharding-algorithm-name: table-inline
+          trainee_center_info:
+            actual-data-nodes: bocaicheckin$->{2018..2020}.trainee_center_info
+            database-strategy:
+              standard:
+                sharding-column: centerId
+                sharding-algorithm-name: centerid-standard
+            table-strategy:
+              none:
     props:
       sql-show: true
-    enabled: true

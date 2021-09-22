@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 public class TransactionConfiguration {
 
     @Bean
-    public PlatformTransactionManager txManager(final DataSource dataSource) {
+    public PlatformTransactionManager transactionManager(final DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
