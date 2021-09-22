@@ -63,3 +63,4 @@ spring:
               none:
     props:
       sql-show: true
+    enabled: true
