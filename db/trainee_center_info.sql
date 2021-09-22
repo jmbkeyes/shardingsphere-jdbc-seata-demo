@@ -1,0 +1,9 @@
+CREATE TABLE `trainee_center_info` (
+	`id` BIGINT(20) NOT NULL,
+	`name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_bin',
+	`centerId` BIGINT(20) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_bin'
+ENGINE=InnoDB
+;
