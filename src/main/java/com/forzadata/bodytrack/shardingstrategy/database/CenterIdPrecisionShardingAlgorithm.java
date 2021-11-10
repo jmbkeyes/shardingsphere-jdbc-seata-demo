@@ -11,7 +11,7 @@ import java.util.Properties;
 public class CenterIdPrecisionShardingAlgorithm implements StandardShardingAlgorithm<Long>{
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<Long> shardingValue) {
-        String value = Consts.CENTERID_MAPPING.get(shardingValue.getValue());
+        String value = Consts.CENTERID_MAPPING.get(Long.parseLong(String.valueOf(shardingValue.getValue())));
         if(null == value){
             throw new UnsupportedOperationException();
         }

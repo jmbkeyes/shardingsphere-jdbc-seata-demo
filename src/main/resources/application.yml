@@ -5,6 +5,8 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      connection:
+        autocommit: false
   shardingsphere:
     datasource:
       names: bocaicheckin${2018..2020}
@@ -17,9 +19,9 @@ spring:
       bocaicheckin2019:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.jdbc.Driver
-        jdbc-url: jdbc:mysql://10.0.0.5:3306/bocai_checkin2019
+        jdbc-url: jdbc:mysql://10.0.0.12:3306/bocai_checkin2019
         username: root
-        password: jmbkeyes
+        password: Forzadata1234
       bocaicheckin2020:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -61,6 +63,23 @@ spring:
                 sharding-algorithm-name: centerid-standard
             table-strategy:
               none:
+          trainee_sub_center_info:
+            actual-data-nodes: bocaicheckin$->{2018..2020}.trainee_sub_center_info
+            database-strategy:
+              standard:
+                sharding-column: centerId
+                sharding-algorithm-name: centerid-standard
+            table-strategy:
+              none:
+          t_config:
+            actual-data-nodes: bocaicheckin2018.t_config
+        binding-tables:
+          - trainee_sub_center_info, trainee_center_info
+        broadcast-tables:
+          - t_config
     props:
       sql-show: true
     enabled: true
+logging:
+  level:
+    org.springframework.transaction.support.AbstractPlatformTransactionManager: TRACE
