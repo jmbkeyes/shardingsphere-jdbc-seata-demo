@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 @RestController
 @RequestMapping(value = "api/test")
@@ -101,7 +102,7 @@ public class TestController {
     }
 
     @RequestMapping(value = "tci")
-    //@Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     @ShardingSphereTransactionType(value = TransactionType.BASE)
     public Object testTraineeCenterInfo() throws Exception {
         TraineeCenterInfo tci = new TraineeCenterInfo();
@@ -109,7 +110,6 @@ public class TestController {
         tci.setName("abc1");
         tci.setId(1L);
         traineeCenterInfoRepository.save(tci);
-
         tci = new TraineeCenterInfo();
         tci.setCenterId(2L);
         tci.setName("abc2");
@@ -124,16 +124,14 @@ public class TestController {
 //
 //        sql = "insert into trainee_center_info(id, name, centerId) values(3,'aaa3',3)";
 //        jdbcTemplate.update(sql);
-//
-//        sql = "insert into trainee_center_info(id, name, centerId) values(4,'aaa4',4)";
-//        jdbcTemplate.update(sql);
-//
 
-        tci = new TraineeCenterInfo();
-        tci.setCenterId(4L);
-        tci.setName("abc4");
-        tci.setId(4L);
-        traineeCenterInfoRepository.save(tci);
+        //sql = "insert into trainee_center_info(id, name, centerId) values(4,'aaa4',4)";
+        //jdbcTemplate.update(sql);
+//        tci = new TraineeCenterInfo();
+//        tci.setCenterId(4L);
+//        tci.setName("abc4");
+//        tci.setId(4L);
+//        traineeCenterInfoRepository.save(tci);
 
 //        TraineeSubCenterInfo tsci = new TraineeSubCenterInfo();
 //        tsci.setCenterId(1L);
@@ -192,6 +190,15 @@ public class TestController {
         });
 
 
+        return "ok";
+    }
+
+    @GetMapping(value = "/multiupdate")
+    public Object multiUpdate(){
+        String sql2 = "update trainee_center_info t inner join trainee_sub_center_info t2  on t.centerId=t2.centerId and t.id=t2.traineeId\n" +
+                "set t.id=2,t2.traineeId=2\n" +
+                "where t.centerId in(1,2)";
+        jdbcTemplate.update(sql2);
         return "ok";
     }
 }
